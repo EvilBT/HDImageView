@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'com.novoda.bintray-release'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -19,6 +19,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions{
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -28,5 +31,13 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
-    //compile 'com.facebook.fresco:imagepipeline:1.2.0'
+}
+
+publish {
+    userOrg = 'sherlock'      //bintray注册的用户名
+    groupId = 'xyz.zpayh'         //compile引用时的第1部分groupId
+    artifactId = 'hdimageview'     //compile引用时的第2部分项目名
+    publishVersion = '1.0.1'    //compile引用时的第3部分版本号
+    desc = 'This is a high-definition picture control that supports zooming'
+    website = 'https://github.com/EvilBT/HDImageView'
 }

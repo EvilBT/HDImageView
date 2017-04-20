@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Original</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="app_name">HDImageView</string>
     <string name="title_activity_view_pager">ViewPagerActivity</string>
     <string name="title_activity_recycler_view">RecyclerViewActivity</string>
     <string name="title_activity_basic">BasicActivity</string>

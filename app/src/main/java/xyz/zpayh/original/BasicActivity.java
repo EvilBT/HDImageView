@@ -42,12 +42,10 @@ public class BasicActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mImageView = (HDImageView) findViewById(R.id.image);
-       // mImageView.setDebug(true);
 
         if (savedInstanceState == null) {
             ImageSource imageSource = ImageSourceBuilder.newBuilder()
                     .setUri(IMAGE_9)
-                    .setOrientation(ORIENTATION_90)
                     .build();
             mImageView.setImageSource(imageSource);
         }
@@ -55,7 +53,7 @@ public class BasicActivity extends AppCompatActivity {
         mImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(BasicActivity.this, "Hello", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BasicActivity.this, "A Long Click Event", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -63,7 +61,7 @@ public class BasicActivity extends AppCompatActivity {
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BasicActivity.this, "单击事件", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BasicActivity.this, "A Click Event", Toast.LENGTH_SHORT).show();
             }
         });
 
