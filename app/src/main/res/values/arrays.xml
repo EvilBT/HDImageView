@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pan_state">
+        <item>Inside</item>
+        <item>Outside</item>
+        <item>Center</item>
+    </string-array>
+    <string-array name="orientation_state">
+        <item>0</item>
+        <item>90</item>
+        <item>180</item>
+        <item>270</item>
+    </string-array>
+    <string-array name="zoom_state">
+        <item>Fixed</item>
+        <item>Center</item>
+        <item>Center Immediate</item>
+    </string-array>
+
+    <string-array name="scale_type">
+        <item>Center Inside</item>
+        <item>Center Crop</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="activity_list">
+        <item>BasicActivity</item>
+        <item>ViewPagerActivity</item>
+        <item>RecyclerViewActivity</item>
+    </string-array>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HDImageView">
+        <attr name="src" format="reference"/>
+        <attr name="duration" format="integer"/>
+        <attr name="translateEnabled" format="boolean"/>
+        <attr name="zoomEnabled" format="boolean"/>
+        <attr name="quickScaleEnabled" format="boolean"/>
+        <attr name="mappingBackgroundColor" format="color"/>
+    </declare-styleable>
+</resources>
