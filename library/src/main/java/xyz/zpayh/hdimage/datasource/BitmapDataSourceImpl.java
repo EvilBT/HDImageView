@@ -140,6 +140,7 @@ public class BitmapDataSourceImpl implements BitmapDataSource {
                                 editor.abort();
                             }
                         }
+                        mHttpDiskCache.flush();
                         snapshot = mHttpDiskCache.get(key);
                     }
                     if (snapshot != null) {
