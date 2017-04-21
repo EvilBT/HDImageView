@@ -11,7 +11,7 @@ Requires Android SDK version 10 or higher.
 **Step 1.** Add the dependency
 ```
 dependencies {
-    compile 'xyz.zpayh:hdimageview:1.0.1'
+    compile 'xyz.zpayh:hdimageview:1.0.2'
 }
 ```
 **Step 2.** Add the view to your layout XML
