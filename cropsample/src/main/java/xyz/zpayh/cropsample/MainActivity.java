@@ -11,6 +11,7 @@ import android.view.View;
 
 import xyz.zpayh.crop.CropHDImageView;
 import xyz.zpayh.hdimage.ImageSourceBuilder;
+import xyz.zpayh.hdimage.state.Translation;
 
 import static xyz.zpayh.hdimage.datasource.BitmapDataSource.ASSET_SCHEME;
 
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                mImage.setTranslateLimit(Translation.COUSTOM);
             }
         });
 

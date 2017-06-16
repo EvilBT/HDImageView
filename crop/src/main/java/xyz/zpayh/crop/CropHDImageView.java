@@ -122,5 +122,7 @@ public class CropHDImageView extends HDImageView{
 
         // 居中
         rectF.set((width-length)/2,(height-length)/2,(width+length)/2,(height+length)/2);
+
+        setCustomRange(mCropRectF);
     }
 }

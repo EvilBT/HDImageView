@@ -35,7 +35,8 @@ import java.lang.annotation.RetentionPolicy;
 @IntDef({
         Translation.INSIDE,
         Translation.OUTSIDE,
-        Translation.CENTER
+        Translation.CENTER,
+        Translation.COUSTOM
 })
 public @interface Translation {
     /**
@@ -50,4 +51,9 @@ public @interface Translation {
      * 允许图像被平移，直到角落到屏幕的中心，但不再进一步。 当您想要将图像上的任何位置平移到屏幕的正确中心时很有用。
      */
     int CENTER = 3;
+
+    /**
+     * 自定义范围
+     */
+    int COUSTOM = 4;
 }
