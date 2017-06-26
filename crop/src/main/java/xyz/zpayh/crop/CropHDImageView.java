@@ -73,15 +73,15 @@ public class CropHDImageView extends HDImageView{
 
         int thickness = 6;
 
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < 4; i++){
             //横线
-            canvas.drawRect((width-length)/2,(height-length-thickness)/2+length*i/3,
-                    (width+length)/2,(height-length+thickness)/2+length*i/3,mLinePaint);
+            canvas.drawRect((width-(length+thickness))/2,(height-length-thickness)/2+length*i/3,
+                    (width+(length+thickness))/2,(height-length+thickness)/2+length*i/3,mLinePaint);
 
             canvas.drawRect((width-length-thickness)/2+length*i/3,
-                    (height-length)/2,
+                    (height-(length+thickness))/2,
                     (width-length+thickness)/2+length*i/3,
-                    (height+length)/2,
+                    (height+(length+thickness))/2,
                     mLinePaint);
         }
     }
