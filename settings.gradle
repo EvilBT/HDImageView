@@ -1,2 +1,1 @@
-include ':app', ':library', ':support-fresco'
-//include ':crop', ':cropsample'
+include ':app', ':library', ':support-fresco', ':support-glide'

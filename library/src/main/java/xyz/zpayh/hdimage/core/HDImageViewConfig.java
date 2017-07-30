@@ -27,6 +27,7 @@ import java.util.List;
 
 import xyz.zpayh.hdimage.datasource.Interceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.AssetInterceptor;
+import xyz.zpayh.hdimage.datasource.interceptor.ContentInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.FileInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.NetworkInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.ResourceInterceptor;
@@ -64,6 +65,7 @@ public class HDImageViewConfig {
 
         mInterceptors.add(new ResourceInterceptor(builder.mContext.getResources()));
         mInterceptors.add(new AssetInterceptor(builder.mContext.getAssets()));
+        mInterceptors.add(new ContentInterceptor(builder.mContext));
         mInterceptors.add(new FileInterceptor());
         mInterceptors.add(new NetworkInterceptor(builder.mContext));
         mInterceptors.addAll(builder.mInterceptors);
