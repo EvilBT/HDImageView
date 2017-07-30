@@ -7,6 +7,7 @@ import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import xyz.zpayh.hdimage.core.HDImageViewConfig;
 import xyz.zpayh.hdimage.core.HDImageViewFactory;
 import xyz.zpayh.hdimage.datasource.interceptor.FrescoInterceptor;
+import xyz.zpayh.hdimage.datasource.interceptor.GlideInterceptor;
 
 /**
  * 文 件 名: MainApplication
@@ -28,6 +29,7 @@ public class MainApplication extends Application {
         // 与Fresco加载库结合，共享缓存
         HDImageViewConfig config = HDImageViewConfig.newBuilder(this)
                 .addInterceptor(new FrescoInterceptor())
+                .addInterceptor(new GlideInterceptor(this))
                 .build();
         HDImageViewFactory.initialize(config);
     }

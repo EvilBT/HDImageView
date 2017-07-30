@@ -1,1 +1,1 @@
-include ':app', ':library', ':support-fresco'
+include ':app', ':library', ':support-fresco', ':support-glide'
