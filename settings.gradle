@@ -1,1 +1,2 @@
-include ':app', ':library', ':crop', ':cropsample'
+include ':app', ':library', ':support-fresco'
+//include ':crop', ':cropsample'
