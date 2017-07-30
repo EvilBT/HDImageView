@@ -26,7 +26,7 @@ import static xyz.zpayh.hdimage.state.Translation.OUTSIDE;
 import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_CENTER;
 import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_CENTER_IMMEDIATE;
 import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_FIXED;
-import static xyz.zpayh.original.UriConstants.IMAGE_9;
+import static xyz.zpayh.original.UriConstants.IMAGE_11;
 
 public class BasicActivity extends AppCompatActivity {
 
@@ -45,7 +45,7 @@ public class BasicActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             ImageSource imageSource = ImageSourceBuilder.newBuilder()
-                    .setUri(IMAGE_9)
+                    .setUri(IMAGE_11)
                     .build();
             mImageView.setImageSource(imageSource);
         }

@@ -2,6 +2,12 @@ package xyz.zpayh.original;
 
 import android.app.Application;
 
+import com.facebook.imagepipeline.core.ImagePipelineFactory;
+
+import xyz.zpayh.hdimage.core.HDImageViewConfig;
+import xyz.zpayh.hdimage.core.HDImageViewFactory;
+import xyz.zpayh.hdimage.datasource.interceptor.FrescoInterceptor;
+
 /**
  * 文 件 名: MainApplication
  * 创 建 人: 陈志鹏
@@ -16,5 +22,13 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        ImagePipelineFactory.initialize(this);
+
+        // 与Fresco加载库结合，共享缓存
+        HDImageViewConfig config = HDImageViewConfig.newBuilder(this)
+                .addInterceptor(new FrescoInterceptor())
+                .build();
+        HDImageViewFactory.initialize(config);
     }
 }
