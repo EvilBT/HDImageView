@@ -46,7 +46,6 @@ import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import java.lang.ref.WeakReference;
@@ -55,8 +54,9 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import xyz.zpayh.hdimage.core.HDImageViewFactory;
 import xyz.zpayh.hdimage.datasource.BitmapDataSource;
-import xyz.zpayh.hdimage.datasource.BitmapDataSourceImpl;
+import xyz.zpayh.hdimage.datasource.DefaultBitmapDataSource;
 import xyz.zpayh.hdimage.state.Orientation;
 import xyz.zpayh.hdimage.state.ScaleType;
 import xyz.zpayh.hdimage.state.Translation;
@@ -107,8 +107,6 @@ public class HDImageView extends View {
     public static final String SOURCE_WIDTH = "source width";
     public static final String SOURCE_Height = "source height";
     public static final String SOURCE_ORIENTATION = "source orientation";
-
-    public static final Interpolator DEFAULT_INTERPOLATOR = new DecelerateInterpolator();
     private static final int DEFAULT_DURATION = 500;
 
     private Uri mUri;
@@ -248,10 +246,16 @@ public class HDImageView extends View {
 
     private void init(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
 
+        HDImageViewFactory.initializeDefault(context);
+
         //init
         mDensity = context.getResources().getDisplayMetrics().density;
         createPaints();
-        mBitmapDataSource = new BitmapDataSourceImpl(context);
+
+        mBitmapDataSource = new DefaultBitmapDataSource();
+        mScaleAnimationInterpolator = HDImageViewFactory.getInstance().getScaleAnimationInterpolator();
+        mTranslationAnimationInterpolator = HDImageViewFactory.getInstance().getTranslationAnimationInterpolator();
+
         mOriginalHandler = new OriginalHandler(this);
         mOriginalExecutor = Executors.newSingleThreadExecutor();
         setMinimumDpi(160);
@@ -458,7 +462,8 @@ public class HDImageView extends View {
         mLastViewCenter.set(0F,0F);
         mLastViewDistance = 0;
         stopAnimator();
-        mScaleAnimationInterpolator = DEFAULT_INTERPOLATOR;
+        mScaleAnimationInterpolator = HDImageViewFactory.getInstance().getScaleAnimationInterpolator();
+        mTranslationAnimationInterpolator = HDImageViewFactory.getInstance().getTranslationAnimationInterpolator();
         mSatTemp.reset();
         mMatrix.reset();
         if (newImage){
@@ -1885,7 +1890,65 @@ public class HDImageView extends View {
             if (mContext == null || mDecoder == null || mUri == null){
                 return;
             }
-            try {
+            final Point dimensions = new Point();
+            mDecoder.init(mContext, mUri, dimensions, new BitmapDataSource.OnInitListener() {
+                @Override
+                public void success() {
+                    int exifOrientation = getExifOrientation(mContext,mUri.toString());
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(SOURCE_ORIENTATION,exifOrientation);
+                    Message msg = Message.obtain();
+                    msg.what = MSG_INIT_SUCCESS;
+                    if (mRect != null){
+
+                        if (mRect.left > mRect.right){
+                            int tmp = mRect.left;
+                            mRect.left = mRect.right;
+                            mRect.right = tmp;
+                        }
+
+                        if (mRect.left < 0 || mRect.left >= dimensions.x){
+                            mRect.left = 0;
+                        }
+
+                        if (mRect.right < 0 || mRect.right > dimensions.x){
+                            mRect.right = dimensions.x;
+                        }
+
+                        if (mRect.top > mRect.bottom){
+                            int tmp = mRect.bottom;
+                            mRect.bottom = mRect.top;
+                            mRect.top = tmp;
+                        }
+
+                        if (mRect.top < 0 || mRect.top >= dimensions.y){
+                            mRect.top = 0;
+                        }
+
+                        if (mRect.bottom < 0 || mRect.bottom > dimensions.y){
+                            mRect.bottom = dimensions.y;
+                        }
+
+                        bundle.putInt(SOURCE_WIDTH,mRect.width());
+                        bundle.putInt(SOURCE_Height,mRect.height());
+                    }else {
+                        bundle.putInt(SOURCE_WIDTH,dimensions.x);
+                        bundle.putInt(SOURCE_Height,dimensions.y);
+                    }
+                    msg.setData(bundle);
+                    mOriginalHandler.sendMessage(msg);
+                }
+
+                @Override
+                public void failed(Throwable throwable) {
+                    Message msg = Message.obtain();
+                    msg.what = MSG_INIT_FAILED;
+                    msg.obj = throwable;
+                    mOriginalHandler.sendMessage(msg);
+                    throwable.printStackTrace();
+                }
+            });
+            /*try {
                 Point dimensions = new Point();
                 mDecoder.init(mContext, mUri,dimensions);
                 int exifOrientation = getExifOrientation(mContext,mUri.toString());
@@ -1937,7 +2000,7 @@ public class HDImageView extends View {
                 msg.obj = e;
                 mOriginalHandler.sendMessage(msg);
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 
