@@ -11,7 +11,7 @@ Requires Android SDK version 10 or higher.
 **Step 1.** Add the dependency
 ```
 dependencies {
-    compile 'xyz.zpayh:hdimageview:1.0.2'
+    compile 'xyz.zpayh:hdimageview:1.0.3'
 }
 ```
 **Step 2.** Add the view to your layout XML
@@ -42,13 +42,13 @@ HDImageView does **not** accept relative URIs. All URIs must be absolute and mus
 
 These are the URI schemes accepted:
 
-| TYPE           | SCHEME                   | FETCH METHOD USED       |
-|----------------|--------------------------|-------------------------|
-|File on network | http://, https://        | HttpURLConnection       |
-|File on device  | file://                  | FileInputStream         |
-|Content provider|content://                |ContentResolver          |
-|Asset in app    | asset://                 |AsseManager              |
-|Resource in app | res:// as in res:///12345|Resources.openRawResource|
+| TYPE           | SCHEME                   | FETCH METHOD USED         |
+|----------------|--------------------------|---------------------------|
+|File on network | http://, https://        | HttpURLConnection         |
+|File on device  | file://                  | FileInputStream           |
+|Content provider| content://               | ContentResolver           |
+|Asset in app    | asset:///                | AsseManager               |
+|Resource in app | res:// as in res:///12345| Resources.openRawResource |
 
 Like this:
 ``` java

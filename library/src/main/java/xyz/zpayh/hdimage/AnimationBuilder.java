@@ -30,8 +30,6 @@ import java.util.List;
 
 import xyz.zpayh.hdimage.util.Preconditions;
 
-import static xyz.zpayh.hdimage.HDImageView.DEFAULT_INTERPOLATOR;
-
 /**
  * 文 件 名: AnimationBuilder
  * 创 建 人: 陈志鹏
@@ -153,8 +151,8 @@ public class AnimationBuilder {
         animator.setViewFocusEnd(mViewFocusEnd);
         animator.setDuration(mDuration);
         animator.setInterrupted(mInterrupt);
-        animator.setScaleInterpolator(mScaleInterpolator == null ? DEFAULT_INTERPOLATOR : mScaleInterpolator);
-        animator.setTranslateInterpolator(mTranslateInterpolator == null ? DEFAULT_INTERPOLATOR : mTranslateInterpolator);
+        animator.setScaleInterpolator(mScaleInterpolator);
+        animator.setTranslateInterpolator(mTranslateInterpolator);
         for (AnimatorUpdateListenerCompat listenerCompat : mAnimatorUpdateListenerCompats) {
             animator.addUpdateListener(listenerCompat);
         }

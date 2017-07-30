@@ -18,40 +18,27 @@
 
 package xyz.zpayh.hdimage.datasource;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
 
+import java.io.IOException;
+
 /**
- * 文 件 名: BitmapDataSource
+ * 文 件 名: Interceptor
  * 创 建 人: 陈志鹏
- * 创建日期: 2017/4/1 17:21
+ * 创建日期: 2017/7/29 16:31
  * 邮   箱: ch_zh_p@qq.com
  * 修改时间:
  * 修改备注:
  */
 
-public interface BitmapDataSource {
+public interface Interceptor {
+    BitmapRegionDecoder intercept(Chain chain) throws IOException;
 
-    String FILE_SCHEME = "file://";
-    String ASSET_SCHEME = "asset:///";
-    String RESOURCE_SCHEME = "res://";
-    String HTTP_SCHEME = "http://";
-    String HTTPS_SCHEME = "https://";
+    interface Chain {
 
-    void init(Context context, Uri uri, Point dimensions, OnInitListener listener);
+        Uri uri();
 
-    Bitmap decode(Rect sRect, int sampleSize);
-
-    boolean isReady();
-
-    void recycle();
-
-    interface OnInitListener{
-        void success();
-
-        void failed(Throwable throwable);
+        BitmapRegionDecoder chain(Uri uri) throws IOException;
     }
 }
