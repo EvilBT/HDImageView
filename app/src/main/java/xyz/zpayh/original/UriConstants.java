@@ -24,4 +24,5 @@ public class UriConstants {
     public static final String IMAGE_8 = ASSET_SCHEME+"girl-2161202.jpg";
     public static final String IMAGE_9 = ASSET_SCHEME+"night-view.jpg";
     public static final String IMAGE_10 = "http://7xi8d6.com1.z0.glb.clouddn.com/2017-04-16-17934400_1738549946443321_2924146161843437568_n.jpg";
+    public static final String IMAGE_11 = "http://wx2.sinaimg.cn/large/005M94J9ly4fgh3xlpcefj31jk1yw0z2.jpg";
 }
