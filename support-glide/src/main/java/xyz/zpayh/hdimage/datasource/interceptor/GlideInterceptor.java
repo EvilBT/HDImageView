@@ -64,45 +64,19 @@ public class GlideInterceptor implements Interceptor{
             return decoder;
         }
 
-        FutureTarget<File> target;
-
-        if (UriUtil.isLocalAssetUri(uri)){
-            String assetsName = uri.getPath().substring(1);
-            Log.d("GlideInterceptor", "名字"+assetsName);
-            target = mRequestManager.downloadOnly()
-                    .load("file:///android_asset/"+assetsName)
-                    .submit(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL);
-        }else if (UriUtil.isLocalFileUri(uri)){
-            File file = new File(uri.getPath());
-            Log.d("GlideInterceptor", "路径"+file.getAbsolutePath());
-            target = mRequestManager.downloadOnly()
-                    .load(file)
-                    .submit(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL);
-        }else if (UriUtil.isLocalResourceUri(uri)){
-            int resId = Integer.parseInt(uri.getPath().substring(1));
-            Log.d("GlideInterceptor", "加载Res");
-            target = mRequestManager.downloadOnly()
-                    .load(resId)
-                    .submit(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL);
-        }else if (UriUtil.isNetworkUri(uri) ||
-                UriUtil.isLocalContentUri(uri) ||
-                UriUtil.isQualifiedResourceUri(uri)){
-            target = mRequestManager.downloadOnly().load(uri).submit(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL);
-        }else {
-            return null;
+        if (UriUtil.isNetworkUri(uri)){
+            FutureTarget<File> target = mRequestManager.downloadOnly().load(uri).submit(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL);
+            try {
+                File file = target.get();
+                Log.d("GlideInterceptor", "用GlideInterceptor加载回来"+file.getAbsolutePath());
+                decoder = BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            mRequestManager.clear(target);
         }
-
-        try {
-            File file = target.get();
-            Log.d("GlideInterceptor", "用GlideInterceptor加载回来"+file.getAbsolutePath());
-            decoder = BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        mRequestManager.clear(target);
         return decoder;
     }
 }

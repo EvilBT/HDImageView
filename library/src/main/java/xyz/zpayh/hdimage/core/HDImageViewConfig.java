@@ -19,9 +19,12 @@
 package xyz.zpayh.hdimage.core;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +46,7 @@ import xyz.zpayh.hdimage.util.Preconditions;
  */
 
 public class HDImageViewConfig {
-
+    private static final String TAG = "HDImageViewConfig";
     //private final BitmapDataSource mBitmapDataSource;
     private final Interpolator mScaleAnimationInterpolator;
     private final Interpolator mTranslationAnimationInterpolator;
@@ -67,8 +70,65 @@ public class HDImageViewConfig {
         mInterceptors.add(new AssetInterceptor(builder.mContext.getAssets()));
         mInterceptors.add(new ContentInterceptor(builder.mContext));
         mInterceptors.add(new FileInterceptor());
-        mInterceptors.add(new NetworkInterceptor(builder.mContext));
+       
+
+        Interceptor interceptor = getInterceptor(builder.mContext);
+        if (interceptor != null){
+            mInterceptors.add(interceptor);
+        }
+        interceptor = getInterceptor();
+        if (interceptor != null){
+            mInterceptors.add(interceptor);
+        }else{
+            mInterceptors.add(new NetworkInterceptor(builder.mContext));
+        }
+
         mInterceptors.addAll(builder.mInterceptors);
+    }
+
+    @SuppressWarnings({"unchecked", "deprecation"})
+    private Interceptor getInterceptor(Context context) {
+        Interceptor interceptor = null;
+
+        try {
+            Class<Interceptor> clazz =
+                    (Class<Interceptor>) Class.forName("xyz.zpayh.hdimage.datasource.interceptor.GlideInterceptor");
+            Constructor<Interceptor> constructor = clazz.getConstructor(Context.class);
+            interceptor = constructor.newInstance(context);
+            Log.d(TAG, "自动配置GlideInterceptor");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return interceptor;
+    }
+
+    @SuppressWarnings({"unchecked", "deprecation"})
+    private Interceptor getInterceptor() {
+        Interceptor interceptor = null;
+
+        try {
+            Class<Interceptor> clazz =
+                    (Class<Interceptor>) Class.forName("xyz.zpayh.hdimage.datasource.interceptor.FrescoInterceptor");
+            interceptor = clazz.newInstance();
+            Log.d(TAG, "自动配置FrescoInterceptor");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return interceptor;
     }
 
     public Interpolator getScaleAnimationInterpolator() {
