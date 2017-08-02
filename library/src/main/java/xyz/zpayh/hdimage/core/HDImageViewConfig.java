@@ -19,7 +19,7 @@
 package xyz.zpayh.hdimage.core;
 
 import android.content.Context;
-import android.util.Log;
+import android.support.annotation.Nullable;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
@@ -47,7 +47,6 @@ import xyz.zpayh.hdimage.util.Preconditions;
 
 public class HDImageViewConfig {
     private static final String TAG = "HDImageViewConfig";
-    //private final BitmapDataSource mBitmapDataSource;
     private final Interpolator mScaleAnimationInterpolator;
     private final Interpolator mTranslationAnimationInterpolator;
 
@@ -70,64 +69,54 @@ public class HDImageViewConfig {
         mInterceptors.add(new AssetInterceptor(builder.mContext.getAssets()));
         mInterceptors.add(new ContentInterceptor(builder.mContext));
         mInterceptors.add(new FileInterceptor());
-       
 
-        Interceptor interceptor = getInterceptor(builder.mContext);
-        if (interceptor != null){
-            mInterceptors.add(interceptor);
+        Interceptor glideInterceptor = addGlideInterceptor(builder.mContext);
+        if (glideInterceptor != null){
+            mInterceptors.add(glideInterceptor);
         }
-        interceptor = getInterceptor();
-        if (interceptor != null){
-            mInterceptors.add(interceptor);
-        }else{
+
+        Interceptor frescoInterceptor = addFrescoInterceptor();
+        if (frescoInterceptor != null){
+            mInterceptors.add(frescoInterceptor);
+        }
+
+        if (glideInterceptor == null && frescoInterceptor == null) {
             mInterceptors.add(new NetworkInterceptor(builder.mContext));
         }
-
         mInterceptors.addAll(builder.mInterceptors);
     }
 
-    @SuppressWarnings({"unchecked", "deprecation"})
-    private Interceptor getInterceptor(Context context) {
+    @Nullable
+    @SuppressWarnings("unchecked")
+    private Interceptor addGlideInterceptor(Context context){
         Interceptor interceptor = null;
-
         try {
             Class<Interceptor> clazz =
                     (Class<Interceptor>) Class.forName("xyz.zpayh.hdimage.datasource.interceptor.GlideInterceptor");
             Constructor<Interceptor> constructor = clazz.getConstructor(Context.class);
             interceptor = constructor.newInstance(context);
-            Log.d(TAG, "自动配置GlideInterceptor");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
         } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
         }
-
         return interceptor;
     }
 
-    @SuppressWarnings({"unchecked", "deprecation"})
-    private Interceptor getInterceptor() {
+    @Nullable
+    @SuppressWarnings("unchecked")
+    private Interceptor addFrescoInterceptor(){
         Interceptor interceptor = null;
 
         try {
             Class<Interceptor> clazz =
                     (Class<Interceptor>) Class.forName("xyz.zpayh.hdimage.datasource.interceptor.FrescoInterceptor");
             interceptor = clazz.newInstance();
-            Log.d(TAG, "自动配置FrescoInterceptor");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
-
         return interceptor;
     }
 

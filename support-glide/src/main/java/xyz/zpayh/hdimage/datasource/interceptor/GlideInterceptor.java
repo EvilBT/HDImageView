@@ -26,7 +26,6 @@ import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.FutureTarget;
-import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,7 +42,7 @@ import xyz.zpayh.hdimage.util.UriUtil;
  * 创建日期: 2017/7/30 17:48
  * 邮   箱: ch_zh_p@qq.com
  * 修改时间:
- * 修改备注:
+ * 修改备注: 只加载网络图片
  */
 
 public class GlideInterceptor implements Interceptor{
@@ -64,18 +63,18 @@ public class GlideInterceptor implements Interceptor{
             return decoder;
         }
 
-        if (UriUtil.isNetworkUri(uri)){
-            FutureTarget<File> target = mRequestManager.downloadOnly().load(uri).submit(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL);
-            try {
-                File file = target.get();
-                Log.d("GlideInterceptor", "用GlideInterceptor加载回来"+file.getAbsolutePath());
-                decoder = BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            mRequestManager.clear(target);
+       if (UriUtil.isNetworkUri(uri)){
+           FutureTarget<File> target = mRequestManager.downloadOnly().load(uri).submit();
+           try {
+               File file = target.get();
+               Log.d("GlideInterceptor", "用GlideInterceptor加载回来"+file.getAbsolutePath());
+               decoder = BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           } catch (ExecutionException e) {
+               e.printStackTrace();
+           }
+           mRequestManager.clear(target);
         }
         return decoder;
     }

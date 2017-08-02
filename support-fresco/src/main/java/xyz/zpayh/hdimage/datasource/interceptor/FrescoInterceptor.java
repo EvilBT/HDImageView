@@ -44,7 +44,7 @@ import xyz.zpayh.hdimage.datasource.Interceptor;
  * 创建日期: 2017/7/30 16:07
  * 邮   箱: ch_zh_p@qq.com
  * 修改时间:
- * 修改备注:
+ * 修改备注: 只加载网络图片
  */
 
 public class FrescoInterceptor implements Interceptor {
@@ -56,7 +56,7 @@ public class FrescoInterceptor implements Interceptor {
             return decoder;
         }
 
-        if (UriUtil.isNetworkUri(uri) || UriUtil.isLocalFileUri(uri)){
+        if (UriUtil.isNetworkUri(uri)){
             ImagePipeline imagePipeline = ImagePipelineFactory.getInstance().getImagePipeline();
 
             ImageRequest request = ImageRequest.fromUri(uri);
