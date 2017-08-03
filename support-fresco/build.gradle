@@ -51,7 +51,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
     provided 'com.facebook.fresco:imagepipeline:1.4.0'
-    provided 'xyz.zpayh:hdimageview:1.0.6'
+    provided 'xyz.zpayh:hdimageview:1.0.8'
 }
 
 // jcenter configuration for novoda's bintray-release
@@ -60,7 +60,7 @@ publish {
     userOrg = 'sherlock'      //bintray注册的用户名
     groupId = 'xyz.zpayh'         //compile引用时的第1部分groupId
     artifactId = 'hdimageview-fresco'     //compile引用时的第2部分项目名
-    publishVersion = '1.0.1'    //compile引用时的第3部分版本号
+    publishVersion = '1.0.2'    //compile引用时的第3部分版本号
     desc = 'This is a high-definition picture control that supports zooming'
     website = 'https://github.com/EvilBT/HDImageView'
 }

@@ -26,10 +26,8 @@ import android.util.Log;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -93,34 +91,31 @@ public class NetworkInterceptor implements Interceptor{
         }
 
         if (UriUtil.isNetworkUri(uri)){
-            Log.d("NetworkInterceptor","从我这加载");
-            InputStream inputStream = processBitmap(uri.toString());
+            if (BuildConfig.DEBUG) {
+                Log.d("NetworkInterceptor", "从我这加载");
+            }
+            File file = processFile(uri.toString());
             try {
-                return BitmapRegionDecoder.newInstance(inputStream,false);
+                //InputStream inputStream = processBitmap(uri.toString());
+                return BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
             } catch (IOException e) {
                 //e.printStackTrace();
-                return Interceptors.fixJPEGDecoder(inputStream,uri,e);
+                return Interceptors.fixJPEGDecoder(file,e);
             }
         }
         return null;
     }
 
-    /**
-     * The main process method, which will be called by the ImageWorker in the AsyncTask background
-     * thread.
-     *
-     * @param data The data to load the bitmap, in this case, a regular http URL
-     * @return The downloaded and resized bitmap
-     */
-    private synchronized InputStream processBitmap(String data) throws IOException{
+
+    private synchronized File processFile(String data) throws IOException{
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "processBitmap - " + data);
+            Log.d(TAG, "processFile - " + data);
         }
 
         final String key = ImageCache.hashKeyForDisk(data);
-        FileDescriptor fileDescriptor = null;
-        FileInputStream fileInputStream = null;
         DiskLruCache.Snapshot snapshot;
+
+        File file = null;
 
         if (mHttpDiskCache != null) {
             snapshot = mHttpDiskCache.get(key);
@@ -141,19 +136,11 @@ public class NetworkInterceptor implements Interceptor{
                 snapshot = mHttpDiskCache.get(key);
             }
             if (snapshot != null) {
-                fileInputStream =
-                        (FileInputStream) snapshot.getInputStream(DISK_CACHE_INDEX);
-                fileDescriptor = fileInputStream.getFD();
-            }
-
-            if (fileDescriptor == null && fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {e.printStackTrace();}
+                file = new File(mHttpDiskCache.getDirectory(), key + "." + DISK_CACHE_INDEX);
             }
         }
 
-        return fileInputStream;
+        return file;
     }
 
     /**

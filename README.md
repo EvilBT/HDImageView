@@ -11,17 +11,17 @@ Requires Android SDK version 10 or higher.
 **Step 1.** Add the dependency
 ```
 dependencies {
-    compile 'xyz.zpayh:hdimageview:1.0.6'
+    compile 'xyz.zpayh:hdimageview:1.0.8'
 
     // 以下可以选用
 
     // if you use Glide 4.x , you can compile :(如果你正在使用Glide4.0或以上的版本，你可以添加下面的库)
-    compile 'xyz.zpayh:hdimageview-glide:1.0.2'
+    compile 'xyz.zpayh:hdimageview-glide:1.0.3'
     compile 'com.github.bumptech.glide:glide:4.0.0'
 
     // if you use Fresco 1.4.x , you can compile :(如果你正在使用Fresco1.4.0或以上的版本，你可以添加下面的库)
     compile 'com.facebook.fresco:imagepipeline:1.4.0'
-    compile 'xyz.zpayh:hdimageview-fresco:1.0.1'
+    compile 'xyz.zpayh:hdimageview-fresco:1.0.2'
 }
 ```
 **Step 2.** Add the view to your layout XML

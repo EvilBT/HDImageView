@@ -19,8 +19,6 @@
 package xyz.zpayh.hdimage.datasource.interceptor;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
 import android.util.Log;
@@ -29,12 +27,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.FutureTarget;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import xyz.zpayh.hdimage.datasource.BuildConfig;
 import xyz.zpayh.hdimage.datasource.Interceptor;
 import xyz.zpayh.hdimage.util.Preconditions;
 import xyz.zpayh.hdimage.util.UriUtil;
@@ -70,17 +68,13 @@ public class GlideInterceptor implements Interceptor{
            FutureTarget<File> target = mRequestManager.downloadOnly().load(uri).submit();
            try {
                File file = target.get();
-               Log.d("GlideInterceptor", "用GlideInterceptor加载回来"+file.getAbsolutePath());
+               if (BuildConfig.DEBUG) {
+                   Log.d("GlideInterceptor", "用GlideInterceptor加载回来" + file.getAbsolutePath());
+               }
                try {
                    decoder = BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
                } catch (IOException e) {
-                   e.printStackTrace();
-                   Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),new BitmapFactory.Options());
-                   ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                   bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                   decoder = BitmapRegionDecoder.newInstance(baos.toByteArray(),0,baos.size(),false);
-
-                   bitmap.recycle();
+                   return Interceptors.fixJPEGDecoder(file,e);
                }
            } catch (InterruptedException e) {
                e.printStackTrace();

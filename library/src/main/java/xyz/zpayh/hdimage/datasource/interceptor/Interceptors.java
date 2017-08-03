@@ -15,11 +15,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import xyz.zpayh.hdimage.BuildConfig;
 import xyz.zpayh.hdimage.util.DiskLruCache;
 import xyz.zpayh.hdimage.util.ImageCache;
 import xyz.zpayh.hdimage.util.Preconditions;
-
-import static android.R.attr.key;
 
 /**
  * 创建人： zp
@@ -60,33 +59,42 @@ public class Interceptors {
         }
     }
 
-    /**
-     * The main process method, which will be called by the ImageWorker in the AsyncTask background
-     * thread.
-     *
-     * @param data The data to load the bitmap, in this case, a regular http URL
-     * @return The downloaded and resized bitmap
-     */
-    private static synchronized File processBitmap(InputStream data,String url, IOException e) throws IOException{
-
+    private static synchronized File processFile(InputStream data, String url, IOException e) throws IOException{
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "processFile - " + data);
+        }
         final String key = ImageCache.hashKeyForDisk(url);
+        DiskLruCache.Snapshot snapshot;
+
         File file = null;
 
         if (mHttpDiskCache != null) {
-            DiskLruCache.Editor editor = mHttpDiskCache.edit(key);
-            if (editor != null) {
-                if (downloadUrlToStream(data,
-                        editor.newOutputStream(DISK_CACHE_INDEX))) {
-                    editor.commit();
-                } else {
-                    editor.abort();
+            snapshot = mHttpDiskCache.get(key);
+            if (snapshot == null) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "processBitmap, not found in http cache, downloading...");
                 }
+                DiskLruCache.Editor editor = mHttpDiskCache.edit(key);
+                if (editor != null) {
+                    if (downloadUrlToStream(data,
+                            editor.newOutputStream(DISK_CACHE_INDEX))) {
+                        editor.commit();
+                    } else {
+                        editor.abort();
+                    }
+                }
+                mHttpDiskCache.flush();
+                snapshot = mHttpDiskCache.get(key);
             }
-            mHttpDiskCache.flush();
-            file = getCleanFile(mHttpDiskCache.getDirectory(),DISK_CACHE_INDEX);
+            if (snapshot != null) {
+                file = new File(mHttpDiskCache.getDirectory(), key + "." + DISK_CACHE_INDEX);
+            }
         }
 
         if (file == null || !file.exists()){
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "下载缓存失败:" + url);
+            }
             throw e;
         }
 
@@ -111,7 +119,7 @@ public class Interceptors {
     }
 
     public static BitmapRegionDecoder fixJPEGDecoder(InputStream inputStream, Uri uri, IOException e) throws IOException {
-        return fixJPEGDecoder(processBitmap(inputStream,uri.toString(),e),e);
+        return fixJPEGDecoder(processFile(inputStream,uri.toString(),e),e);
     }
 
     public static BitmapRegionDecoder fixJPEGDecoder(File file, IOException e) throws IOException {
@@ -121,15 +129,19 @@ public class Interceptors {
         }
 
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),new BitmapFactory.Options());
+        if (bitmap == null) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "加载缓存失败:" + file.getAbsolutePath());
+            }
+            throw e;
+        }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 85, baos);
         BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(baos.toByteArray(),0,baos.size(),false);
         bitmap.recycle();
-        Log.d(TAG, "fixJPEGDecoder: 从此修复Bitmap");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "fixJPEGDecoder: 从此处修复Bitmap");
+        }
         return decoder;
-    }
-
-    private static File getCleanFile(File directory, int i) {
-        return new File(directory, key + "." + i);
     }
 }

@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import xyz.zpayh.hdimage.BuildConfig;
 import xyz.zpayh.hdimage.datasource.Interceptor;
 import xyz.zpayh.hdimage.util.UriUtil;
 
@@ -51,7 +52,9 @@ public class FileInterceptor implements Interceptor {
 
         if (UriUtil.isLocalFileUri(uri)){
             File file = new File(uri.getPath());
-            Log.d("FileInterceptor","从我这加载");
+            if (BuildConfig.DEBUG) {
+                Log.d("FileInterceptor", "从我这加载");
+            }
             try {
                 return BitmapRegionDecoder.newInstance(new FileInputStream(file.toString()),false);
             } catch (IOException e) {

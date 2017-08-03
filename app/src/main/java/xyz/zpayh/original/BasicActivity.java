@@ -48,7 +48,8 @@ public class BasicActivity extends AppCompatActivity {
                     //.setUri(IMAGE_11)
                     .build();
             imageSource = */ImageSourceBuilder.newBuilder()
-                    .setUri(R.drawable.fixyuv)
+                    .setUri("http://o9qzkbu2x.bkt.clouddn.com/1-0363.jpg")
+                    //.setUri(ASSET_SCHEME+"fix.jpg")
                     .build();
             mImageView.setImageSource(imageSource);
         }
