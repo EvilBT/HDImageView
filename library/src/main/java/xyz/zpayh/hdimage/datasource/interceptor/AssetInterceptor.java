@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import xyz.zpayh.hdimage.datasource.Interceptor;
 import xyz.zpayh.hdimage.util.UriUtil;
@@ -55,8 +56,14 @@ public class AssetInterceptor implements Interceptor{
 
         if (UriUtil.isLocalAssetUri(uri)){
             Log.d("AssetInterceptor","从我这加载");
-            return BitmapRegionDecoder.newInstance(
-                    mAssetManager.open(getAssetName(uri),AssetManager.ACCESS_STREAMING),false);
+            InputStream inputStream = mAssetManager.open(getAssetName(uri),AssetManager.ACCESS_STREAMING);
+            try {
+                return BitmapRegionDecoder.newInstance(inputStream,false);
+            } catch (IOException e) {
+
+                return Interceptors.fixJPEGDecoder(inputStream,uri,e);
+                //e.printStackTrace();
+            }
         }
         return null;
     }

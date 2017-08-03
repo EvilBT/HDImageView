@@ -32,6 +32,7 @@ import xyz.zpayh.hdimage.datasource.Interceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.AssetInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.ContentInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.FileInterceptor;
+import xyz.zpayh.hdimage.datasource.interceptor.Interceptors;
 import xyz.zpayh.hdimage.datasource.interceptor.NetworkInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.ResourceInterceptor;
 import xyz.zpayh.hdimage.util.Preconditions;
@@ -84,6 +85,9 @@ public class HDImageViewConfig {
             mInterceptors.add(new NetworkInterceptor(builder.mContext));
         }
         mInterceptors.addAll(builder.mInterceptors);
+
+        //init
+        Interceptors.initDiskLruCache(builder.mContext);
     }
 
     @Nullable

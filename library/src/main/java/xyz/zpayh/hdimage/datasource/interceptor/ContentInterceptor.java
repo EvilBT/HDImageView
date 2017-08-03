@@ -60,7 +60,12 @@ public class ContentInterceptor implements Interceptor {
             try {
                 ContentResolver resolver = mContext.getContentResolver();
                 inputStream = resolver.openInputStream(uri);
-                decoder = BitmapRegionDecoder.newInstance(inputStream,false);
+                try {
+                    decoder = BitmapRegionDecoder.newInstance(inputStream,false);
+                } catch (IOException e) {
+                    //e.printStackTrace();
+                    return Interceptors.fixJPEGDecoder(inputStream,uri,e);
+                }
             } finally {
                 if (inputStream != null){
                     try { inputStream.close(); }

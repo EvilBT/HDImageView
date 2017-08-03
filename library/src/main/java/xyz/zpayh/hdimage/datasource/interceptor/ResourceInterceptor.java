@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import xyz.zpayh.hdimage.datasource.Interceptor;
 import xyz.zpayh.hdimage.util.UriUtil;
@@ -55,7 +56,12 @@ public class ResourceInterceptor implements Interceptor {
 
         if (UriUtil.isLocalResourceUri(uri)){
             Log.d("ResourceInterceptor","从我这加载");
-            return BitmapRegionDecoder.newInstance(mResources.openRawResource(getResourceId(uri)),false);
+            InputStream inputStream = mResources.openRawResource(getResourceId(uri));
+            try {
+                return BitmapRegionDecoder.newInstance(inputStream,false);
+            } catch (IOException e) {
+                return Interceptors.fixJPEGDecoder(inputStream,uri,e);
+            }
         }
         return null;
     }

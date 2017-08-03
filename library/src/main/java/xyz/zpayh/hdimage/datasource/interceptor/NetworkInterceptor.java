@@ -95,7 +95,12 @@ public class NetworkInterceptor implements Interceptor{
         if (UriUtil.isNetworkUri(uri)){
             Log.d("NetworkInterceptor","从我这加载");
             InputStream inputStream = processBitmap(uri.toString());
-            return BitmapRegionDecoder.newInstance(inputStream,false);
+            try {
+                return BitmapRegionDecoder.newInstance(inputStream,false);
+            } catch (IOException e) {
+                //e.printStackTrace();
+                return Interceptors.fixJPEGDecoder(inputStream,uri,e);
+            }
         }
         return null;
     }

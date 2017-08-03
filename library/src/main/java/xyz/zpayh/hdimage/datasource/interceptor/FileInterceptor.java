@@ -52,7 +52,11 @@ public class FileInterceptor implements Interceptor {
         if (UriUtil.isLocalFileUri(uri)){
             File file = new File(uri.getPath());
             Log.d("FileInterceptor","从我这加载");
-            return BitmapRegionDecoder.newInstance(new FileInputStream(file.toString()),false);
+            try {
+                return BitmapRegionDecoder.newInstance(new FileInputStream(file.toString()),false);
+            } catch (IOException e) {
+                return Interceptors.fixJPEGDecoder(file,e);
+            }
         }
         return null;
     }
