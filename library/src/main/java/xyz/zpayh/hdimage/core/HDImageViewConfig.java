@@ -19,9 +19,12 @@
 package xyz.zpayh.hdimage.core;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,7 @@ import xyz.zpayh.hdimage.datasource.Interceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.AssetInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.ContentInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.FileInterceptor;
+import xyz.zpayh.hdimage.datasource.interceptor.Interceptors;
 import xyz.zpayh.hdimage.datasource.interceptor.NetworkInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.ResourceInterceptor;
 import xyz.zpayh.hdimage.util.Preconditions;
@@ -43,8 +47,7 @@ import xyz.zpayh.hdimage.util.Preconditions;
  */
 
 public class HDImageViewConfig {
-
-    //private final BitmapDataSource mBitmapDataSource;
+    private static final String TAG = "HDImageViewConfig";
     private final Interpolator mScaleAnimationInterpolator;
     private final Interpolator mTranslationAnimationInterpolator;
 
@@ -67,8 +70,58 @@ public class HDImageViewConfig {
         mInterceptors.add(new AssetInterceptor(builder.mContext.getAssets()));
         mInterceptors.add(new ContentInterceptor(builder.mContext));
         mInterceptors.add(new FileInterceptor());
-        mInterceptors.add(new NetworkInterceptor(builder.mContext));
+
+        Interceptor glideInterceptor = addGlideInterceptor(builder.mContext);
+        if (glideInterceptor != null){
+            mInterceptors.add(glideInterceptor);
+        }
+
+        Interceptor frescoInterceptor = addFrescoInterceptor();
+        if (frescoInterceptor != null){
+            mInterceptors.add(frescoInterceptor);
+        }
+
+        if (glideInterceptor == null && frescoInterceptor == null) {
+            mInterceptors.add(new NetworkInterceptor(builder.mContext));
+        }
         mInterceptors.addAll(builder.mInterceptors);
+
+        //init
+        Interceptors.initDiskLruCache(builder.mContext);
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    private Interceptor addGlideInterceptor(Context context){
+        Interceptor interceptor = null;
+        try {
+            Class<Interceptor> clazz =
+                    (Class<Interceptor>) Class.forName("xyz.zpayh.hdimage.datasource.interceptor.GlideInterceptor");
+            Constructor<Interceptor> constructor = clazz.getConstructor(Context.class);
+            interceptor = constructor.newInstance(context);
+        } catch (ClassNotFoundException e) {
+        } catch (NoSuchMethodException e) {
+        } catch (InstantiationException e) {
+        } catch (IllegalAccessException e) {
+        } catch (InvocationTargetException e) {
+        }
+        return interceptor;
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    private Interceptor addFrescoInterceptor(){
+        Interceptor interceptor = null;
+
+        try {
+            Class<Interceptor> clazz =
+                    (Class<Interceptor>) Class.forName("xyz.zpayh.hdimage.datasource.interceptor.FrescoInterceptor");
+            interceptor = clazz.newInstance();
+        } catch (ClassNotFoundException e) {
+        } catch (InstantiationException e) {
+        } catch (IllegalAccessException e) {
+        }
+        return interceptor;
     }
 
     public Interpolator getScaleAnimationInterpolator() {
