@@ -22,6 +22,9 @@ import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
 import android.util.Log;
 
+import com.facebook.binaryresource.BinaryResource;
+import com.facebook.binaryresource.FileBinaryResource;
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferInputStream;
@@ -29,10 +32,12 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSources;
+import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -67,13 +72,27 @@ public class FrescoInterceptor implements Interceptor {
                     return null;
                 }
                 PooledByteBuffer result = ref.get();
-                InputStream inputStream = new PooledByteBufferInputStream(result);
-                //ImageFormat imageFormat = ImageFormatChecker.getImageFormat(inputStream);
-                Closeables.closeQuietly(inputStream);
-                Log.d("FrescoInterceptor","从我这加载");
-                return BitmapRegionDecoder.newInstance(inputStream,false);
+                if (BuildConfig.DEBUG) {
+                    Log.d("FrescoInterceptor", "从我这加载");
+                }
+                try {
+                    InputStream inputStream = new PooledByteBufferInputStream(result);
+                    Closeables.closeQuietly(inputStream);
+                    return BitmapRegionDecoder.newInstance(inputStream,false);
+                } catch (IOException e) {
+                    ImageRequest imageRequest=ImageRequest.fromUri(uri);
+                    CacheKey cacheKey= DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(imageRequest,null);
+                    BinaryResource resource = ImagePipelineFactory.getInstance().getMainFileCache().getResource(cacheKey);
+                    File file=((FileBinaryResource)resource).getFile();
+                    if (BuildConfig.DEBUG) {
+                        Log.d("FrescoInterceptor", file.getName());
+                    }
+                    return Interceptors.fixJPEGDecoder(file,e);
+                }
             } catch (Throwable throwable) {
-                Log.d("FrescoInterceptor", "intercept: 加载失败了");
+                if (BuildConfig.DEBUG) {
+                    Log.d("FrescoInterceptor", "intercept: 加载失败了");
+                }
                 throwable.printStackTrace();
                 return null;
             }

@@ -32,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import xyz.zpayh.hdimage.datasource.BuildConfig;
 import xyz.zpayh.hdimage.datasource.Interceptor;
 import xyz.zpayh.hdimage.util.Preconditions;
 import xyz.zpayh.hdimage.util.UriUtil;
@@ -67,8 +68,14 @@ public class GlideInterceptor implements Interceptor{
            FutureTarget<File> target = mRequestManager.downloadOnly().load(uri).submit();
            try {
                File file = target.get();
-               Log.d("GlideInterceptor", "用GlideInterceptor加载回来"+file.getAbsolutePath());
-               decoder = BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
+               if (BuildConfig.DEBUG) {
+                   Log.d("GlideInterceptor", "用GlideInterceptor加载回来" + file.getAbsolutePath());
+               }
+               try {
+                   decoder = BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
+               } catch (IOException e) {
+                   return Interceptors.fixJPEGDecoder(file,e);
+               }
            } catch (InterruptedException e) {
                e.printStackTrace();
            } catch (ExecutionException e) {

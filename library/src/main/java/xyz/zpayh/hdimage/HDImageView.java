@@ -26,6 +26,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -78,6 +79,7 @@ import static xyz.zpayh.hdimage.state.ScaleType.CENTER_CROP;
 import static xyz.zpayh.hdimage.state.ScaleType.CENTER_INSIDE;
 import static xyz.zpayh.hdimage.state.ScaleType.CUSTOM;
 import static xyz.zpayh.hdimage.state.Translation.CENTER;
+import static xyz.zpayh.hdimage.state.Translation.COUSTOM;
 import static xyz.zpayh.hdimage.state.Translation.INSIDE;
 import static xyz.zpayh.hdimage.state.Translation.OUTSIDE;
 import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_CENTER;
@@ -129,6 +131,8 @@ public class HDImageView extends View {
 
     @Translation
     private int mTranslateLimit = INSIDE;
+
+    private RectF mCustomRange = new RectF();
 
     @ScaleType
     private int mScaleType = CENTER_INSIDE;
@@ -1167,6 +1171,10 @@ public class HDImageView extends View {
         }
     }
 
+    public void setCustomRange(RectF range){
+        this.mCustomRange.set(range);
+    }
+
     private void fitToBounds(boolean center, ScaleAndTranslate sat){
         if (mTranslateLimit == OUTSIDE && isReady()){
             center = false;
@@ -1181,11 +1189,44 @@ public class HDImageView extends View {
                 : 0.5f;
 
         // 限制缩放的大小
-        final float scale = limitedScale(sat.mScale);
+        float scale = limitedScale(sat.mScale);
         sat.mScale = scale;
         // 获取缩放后的图片宽高
-        final float scaleWidth = scale * getShowWidth();
-        final float scaleHeight = scale * getShowHeight();
+        float scaleWidth = scale * getShowWidth();
+        float scaleHeight = scale * getShowHeight();
+
+        if (mTranslateLimit == COUSTOM && isReady() && !mCustomRange.isEmpty()){
+            if (scaleWidth < mCustomRange.width()){
+                scale =  (mCustomRange.width()*1.0f) / (getShowWidth() * 1.0f);
+                sat.mScale = scale;
+                // 获取缩放后的图片宽高
+                scaleWidth = scale * getShowWidth();
+                scaleHeight = scale * getShowHeight();
+            }
+
+            if (scaleHeight < mCustomRange.height()){
+                scale = (mCustomRange.height()*1.0f) / (getShowHeight() * 1.0f);
+                sat.mScale = scale;
+                // 获取缩放后的图片宽高
+                scaleWidth = scale * getShowWidth();
+                scaleHeight = scale * getShowHeight();
+            }
+
+            float translateX = limitTranslate(
+                    mCustomRange.right - scaleWidth,
+                    sat.mViewTranslate.x,
+                    Math.max(0F,mCustomRange.left)
+            );
+
+            float translateY = limitTranslate(
+                    mCustomRange.bottom - scaleHeight,
+                    sat.mViewTranslate.y,
+                    Math.max(0F,mCustomRange.top)
+            );
+            sat.mViewTranslate.x = translateX;
+            sat.mViewTranslate.y = translateY;
+            return;
+        }
 
         if (mTranslateLimit == CENTER && isReady()){
             float translateX = limitTranslate(getWidth()/2.0F-scaleWidth,
