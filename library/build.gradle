@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -29,17 +29,17 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:support-annotations:25.3.1'
 }
 
 // jcenter configuration for novoda's bintray-release
 // $ ./gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
-publish {
+/*publish {
     userOrg = 'sherlock'      //bintray注册的用户名
     groupId = 'xyz.zpayh'         //compile引用时的第1部分groupId
     artifactId = 'hdimageview'     //compile引用时的第2部分项目名
-    publishVersion = '1.0.6'    //compile引用时的第3部分版本号
+    publishVersion = '2.0.0'    //compile引用时的第3部分版本号
     desc = 'This is a high-definition picture control that supports zooming'
     website = 'https://github.com/EvilBT/HDImageView'
-}
+}*/

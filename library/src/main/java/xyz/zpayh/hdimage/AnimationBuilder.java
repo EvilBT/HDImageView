@@ -20,14 +20,14 @@ package xyz.zpayh.hdimage;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
-import android.support.v4.animation.AnimatorListenerCompat;
-import android.support.v4.animation.AnimatorUpdateListenerCompat;
 import android.view.View;
 import android.view.animation.Interpolator;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.zpayh.hdimage.animation.AnimatorListener;
+import xyz.zpayh.hdimage.animation.AnimatorUpdateListener;
 import xyz.zpayh.hdimage.util.Preconditions;
 
 /**
@@ -51,8 +51,8 @@ public class AnimationBuilder {
     private boolean mInterrupt = true;
 
     private View mTarget;
-    private final List<AnimatorListenerCompat> mAnimatorListenerCompats = new ArrayList<>();
-    private final List<AnimatorUpdateListenerCompat> mAnimatorUpdateListenerCompats =
+    private final List<AnimatorListener> mAnimatorListener = new ArrayList<>();
+    private final List<AnimatorUpdateListener> mAnimatorUpdateListener =
             new ArrayList<>();
 
     private PointF mViewFocusStart;
@@ -82,35 +82,35 @@ public class AnimationBuilder {
         return this;
     }
 
-    public AnimationBuilder addAnimationListener(AnimatorListenerCompat listener) {
+    public AnimationBuilder addAnimationListener(AnimatorListener listener) {
         if (listener == null){
             return this;
         }
-        mAnimatorListenerCompats.add(listener);
+        mAnimatorListener.add(listener);
         return this;
     }
 
-    public AnimationBuilder addAnimationListener(List<AnimatorListenerCompat> listeners) {
+    public AnimationBuilder addAnimationListener(List<AnimatorListener> listeners) {
         if (listeners == null){
             return this;
         }
-        mAnimatorListenerCompats.addAll(listeners);
+        mAnimatorListener.addAll(listeners);
         return this;
     }
 
-    public AnimationBuilder addAnimationUpdateListener(AnimatorUpdateListenerCompat listener) {
+    public AnimationBuilder addAnimationUpdateListener(AnimatorUpdateListener listener) {
         if (listener == null){
             return this;
         }
-        mAnimatorUpdateListenerCompats.add(listener);
+        mAnimatorUpdateListener.add(listener);
         return this;
     }
 
-    public AnimationBuilder addAnimationUpdateListener(List<AnimatorUpdateListenerCompat> listeners) {
+    public AnimationBuilder addAnimationUpdateListener(List<AnimatorUpdateListener> listeners) {
         if (listeners == null){
             return this;
         }
-        mAnimatorUpdateListenerCompats.addAll(listeners);
+        mAnimatorUpdateListener.addAll(listeners);
         return this;
     }
 
@@ -140,9 +140,9 @@ public class AnimationBuilder {
         return this;
     }
 
-    public ValueAnimator build(){
+    public SimpleValueAnimator build(){
 
-        ValueAnimator animator = new ValueAnimator();
+        SimpleValueAnimator animator = new SimpleValueAnimator();
         animator.setTarget(mTarget);
         animator.setScaleStart(mScaleStart);
         animator.setScaleEnd(mScaleEnd);
@@ -153,11 +153,11 @@ public class AnimationBuilder {
         animator.setInterrupted(mInterrupt);
         animator.setScaleInterpolator(mScaleInterpolator);
         animator.setTranslateInterpolator(mTranslateInterpolator);
-        for (AnimatorUpdateListenerCompat listenerCompat : mAnimatorUpdateListenerCompats) {
-            animator.addUpdateListener(listenerCompat);
+        for (AnimatorUpdateListener listener : mAnimatorUpdateListener) {
+            animator.addUpdateListener(listener);
         }
-        for (AnimatorListenerCompat listenerCompat : mAnimatorListenerCompats) {
-            animator.addListener(listenerCompat);
+        for (AnimatorListener listener : mAnimatorListener) {
+            animator.addListener(listener);
         }
         return animator;
     }
