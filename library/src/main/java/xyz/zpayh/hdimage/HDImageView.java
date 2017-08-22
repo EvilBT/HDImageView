@@ -37,9 +37,6 @@ import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.animation.AnimatorListenerCompat;
-import android.support.v4.animation.AnimatorUpdateListenerCompat;
-import android.support.v4.animation.ValueAnimatorCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -55,6 +52,9 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import xyz.zpayh.hdimage.animation.AnimatorListener;
+import xyz.zpayh.hdimage.animation.AnimatorUpdateListener;
+import xyz.zpayh.hdimage.animation.ValueAnimator;
 import xyz.zpayh.hdimage.core.HDImageViewFactory;
 import xyz.zpayh.hdimage.datasource.BitmapDataSource;
 import xyz.zpayh.hdimage.datasource.DefaultBitmapDataSource;
@@ -196,9 +196,9 @@ public class HDImageView extends View {
 
     private int mDuration = DEFAULT_DURATION;
     // 缩放和中心动画跟踪
-    private ValueAnimator mValueAnimator;
-    private AnimatorListenerCompat mAnimatorListener;
-    private AnimatorUpdateListenerCompat mAnimatorUpdateListener;
+    private SimpleValueAnimator mValueAnimator;
+    private AnimatorListener mAnimatorListener;
+    private AnimatorUpdateListener mAnimatorUpdateListener;
     private Interpolator mScaleAnimationInterpolator;
     private Interpolator mTranslationAnimationInterpolator;
     //是否已将通知发送到子类
@@ -221,16 +221,16 @@ public class HDImageView extends View {
     private float[] mSrcArray = new float[8];
     private float[] mDstArray = new float[8];
 
-    private final AnimatorUpdateListenerCompat mAnimatorUpdateListenerCompat = new AnimatorUpdateListenerCompat() {
+    private final AnimatorUpdateListener mDefaultAnimatorUpdateListener = new AnimatorUpdateListener() {
         @Override
-        public void onAnimationUpdate(ValueAnimatorCompat animation) {
+        public void onAnimationUpdate(ValueAnimator animation) {
             updateScaleAndTranslate();
         }
     };
 
-    private final AnimatorListenerCompat mAnimatorListenerCompat = new DefaultAnimatorListenerCompat() {
+    private final AnimatorListener mDefaultAnimatorListener = new SimpleAnimatorListener() {
         @Override
-        public void onAnimationEnd(ValueAnimatorCompat animation) {
+        public void onAnimationEnd(ValueAnimator animation) {
             updateScaleAndTranslate();
         }
     };
@@ -352,19 +352,19 @@ public class HDImageView extends View {
         return mTranslationAnimationInterpolator;
     }
 
-    public void setAnimatorListener(AnimatorListenerCompat animatorListener) {
+    public void setAnimatorListener(AnimatorListener animatorListener) {
         mAnimatorListener = animatorListener;
     }
 
-    public AnimatorListenerCompat getAnimatorListener() {
+    public AnimatorListener getAnimatorListener() {
         return mAnimatorListener;
     }
 
-    public void setAnimatorUpdateListener(AnimatorUpdateListenerCompat animatorUpdateListener) {
+    public void setAnimatorUpdateListener(AnimatorUpdateListener animatorUpdateListener) {
         mAnimatorUpdateListener = animatorUpdateListener;
     }
 
-    public AnimatorUpdateListenerCompat getAnimatorUpdateListener() {
+    public AnimatorUpdateListener getAnimatorUpdateListener() {
         return mAnimatorUpdateListener;
     }
 
@@ -1820,9 +1820,9 @@ public class HDImageView extends View {
                 .setScaleInterpolator(mScaleAnimationInterpolator)
                 .setDuration(mDuration)
                 .addAnimationListener(mAnimatorListener)
-                .addAnimationListener(mAnimatorListenerCompat)
+                .addAnimationListener(mDefaultAnimatorListener)
                 .addAnimationUpdateListener(mAnimatorUpdateListener)
-                .addAnimationUpdateListener(mAnimatorUpdateListenerCompat)
+                .addAnimationUpdateListener(mDefaultAnimatorUpdateListener)
                 .build();
         mValueAnimator.start();
 
@@ -1851,9 +1851,9 @@ public class HDImageView extends View {
                 .setTranslateInterpolator(mTranslationAnimationInterpolator)
                 .setScaleInterpolator(mScaleAnimationInterpolator)
                 .addAnimationListener(mAnimatorListener)
-                .addAnimationListener(mAnimatorListenerCompat)
+                .addAnimationListener(mDefaultAnimatorListener)
                 .addAnimationUpdateListener(mAnimatorUpdateListener)
-                .addAnimationUpdateListener(mAnimatorUpdateListenerCompat)
+                .addAnimationUpdateListener(mDefaultAnimatorUpdateListener)
                 .build();
 
         mValueAnimator.start();
@@ -1898,9 +1898,9 @@ public class HDImageView extends View {
                 .setTranslateInterpolator(mTranslationAnimationInterpolator)
                 .setScaleInterpolator(mScaleAnimationInterpolator)
                 .addAnimationListener(mAnimatorListener)
-                .addAnimationListener(mAnimatorListenerCompat)
+                .addAnimationListener(mDefaultAnimatorListener)
                 .addAnimationUpdateListener(mAnimatorUpdateListener)
-                .addAnimationUpdateListener(mAnimatorUpdateListenerCompat)
+                .addAnimationUpdateListener(mDefaultAnimatorUpdateListener)
                 .build();
 
         mValueAnimator.start();

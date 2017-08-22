@@ -19,17 +19,18 @@
 package xyz.zpayh.hdimage;
 
 import android.graphics.PointF;
-import android.support.v4.animation.AnimatorListenerCompat;
-import android.support.v4.animation.AnimatorUpdateListenerCompat;
-import android.support.v4.animation.ValueAnimatorCompat;
 import android.view.View;
 import android.view.animation.Interpolator;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.zpayh.hdimage.animation.AnimatorListener;
+import xyz.zpayh.hdimage.animation.AnimatorUpdateListener;
+import xyz.zpayh.hdimage.animation.ValueAnimator;
+
 /**
- * 文 件 名: ValueAnimator
+ * 文 件 名: SimpleValueAnimator
  * 创 建 人: 陈志鹏
  * 创建日期: 2017/4/20 14:43
  * 邮   箱: ch_zh_p@qq.com
@@ -37,10 +38,10 @@ import java.util.List;
  * 修改备注:
  */
 
-public class ValueAnimator implements ValueAnimatorCompat{
-    private List<AnimatorListenerCompat> mListeners = new ArrayList<AnimatorListenerCompat>();
-    private List<AnimatorUpdateListenerCompat> mUpdateListeners
-            = new ArrayList<AnimatorUpdateListenerCompat>();
+public class SimpleValueAnimator implements ValueAnimator {
+    private List<AnimatorListener> mListeners = new ArrayList<>();
+    private List<AnimatorUpdateListener> mUpdateListeners
+            = new ArrayList<>();
     private View mTarget;
     private long mStartTime;
     private long mDuration = 500;
@@ -59,7 +60,7 @@ public class ValueAnimator implements ValueAnimatorCompat{
     private Interpolator mScaleInterpolator;
     private Interpolator mTranslateInterpolator;
 
-    public ValueAnimator() {
+    public SimpleValueAnimator() {
     }
 
     public void setScaleStart(float scaleStart) {
@@ -167,7 +168,7 @@ public class ValueAnimator implements ValueAnimatorCompat{
     }
 
     @Override
-    public void addListener(AnimatorListenerCompat listener) {
+    public void addListener(AnimatorListener listener) {
         mListeners.add(listener);
     }
 
@@ -211,7 +212,7 @@ public class ValueAnimator implements ValueAnimatorCompat{
     }
 
     @Override
-    public void addUpdateListener(AnimatorUpdateListenerCompat animatorUpdateListener) {
+    public void addUpdateListener(AnimatorUpdateListener animatorUpdateListener) {
         mUpdateListeners.add(animatorUpdateListener);
     }
 
