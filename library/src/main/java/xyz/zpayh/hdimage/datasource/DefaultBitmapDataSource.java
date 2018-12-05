@@ -25,9 +25,11 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
+import xyz.zpayh.hdimage.HDImageView;
 import xyz.zpayh.hdimage.core.HDImageViewFactory;
 
 /**
@@ -43,6 +45,7 @@ public class DefaultBitmapDataSource implements BitmapDataSource{
 
     private BitmapRegionDecoder mDecoder;
     private final Object mDecoderLock = new Object();
+    private OrientationInterceptor mOrientationInterceptor;
 
     @Override
     public void init(Context context, Uri uri, Point dimensions, OnInitListener listener) {
@@ -92,6 +95,14 @@ public class DefaultBitmapDataSource implements BitmapDataSource{
         if (mDecoder != null) {
             mDecoder.recycle();
         }
+    }
+
+    @Override
+    public int getExifOrientation(@NonNull Context context, String sourceUri) {
+        if (mOrientationInterceptor == null) {
+            mOrientationInterceptor = new RealOrientationInterceptor(HDImageViewFactory.getInstance().getOrientationInterceptor());
+        }
+        return mOrientationInterceptor.getExifOrientation(context, sourceUri);
     }
 
     private BitmapRegionDecoder getDecoderWithInterceptorChain(Uri uri) throws IOException{

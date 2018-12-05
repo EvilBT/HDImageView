@@ -86,7 +86,6 @@ import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_CENTER;
 import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_CENTER_IMMEDIATE;
 import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_FIXED;
 import static xyz.zpayh.hdimage.util.Utils.fileRect;
-import static xyz.zpayh.hdimage.util.Utils.getExifOrientation;
 
 /**
  * 文 件 名: OriginalImageView
@@ -1935,7 +1934,7 @@ public class HDImageView extends View {
             mDecoder.init(mContext, mUri, dimensions, new BitmapDataSource.OnInitListener() {
                 @Override
                 public void success() {
-                    int exifOrientation = getExifOrientation(mContext,mUri.toString());
+                    int exifOrientation = mBitmapDataSource.getExifOrientation(mContext,mUri.toString());
                     Bundle bundle = new Bundle();
                     bundle.putInt(SOURCE_ORIENTATION,exifOrientation);
                     Message msg = Message.obtain();

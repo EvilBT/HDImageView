@@ -24,6 +24,7 @@ import android.view.animation.Interpolator;
 import java.util.List;
 
 import xyz.zpayh.hdimage.datasource.Interceptor;
+import xyz.zpayh.hdimage.datasource.OrientationInterceptor;
 import xyz.zpayh.hdimage.util.Preconditions;
 
 /**
@@ -81,5 +82,9 @@ public class HDImageViewFactory {
 
     public List<Interceptor> getDataSourceInterceptor(){
         return mConfig.getInterceptors();
+    }
+
+    public List<OrientationInterceptor> getOrientationInterceptor() {
+        return mConfig.getOrientationInterceptors();
     }
 }
