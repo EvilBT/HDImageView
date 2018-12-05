@@ -23,6 +23,9 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+
+import xyz.zpayh.hdimage.state.Orientation;
 
 /**
  * 文 件 名: BitmapDataSource
@@ -48,6 +51,9 @@ public interface BitmapDataSource {
     boolean isReady();
 
     void recycle();
+
+    @Orientation
+    int getExifOrientation(@NonNull Context context, String sourceUri);
 
     interface OnInitListener{
         void success();

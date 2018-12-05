@@ -18,24 +18,47 @@
 
 package xyz.zpayh.hdimage.core;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.media.ExifInterface;
+import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import xyz.zpayh.hdimage.datasource.Interceptor;
+import xyz.zpayh.hdimage.datasource.OrientationInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.AssetInterceptor;
+import xyz.zpayh.hdimage.datasource.interceptor.AssetOrientationInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.ContentInterceptor;
+import xyz.zpayh.hdimage.datasource.interceptor.ContentOrientationInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.FileInterceptor;
+import xyz.zpayh.hdimage.datasource.interceptor.FileOrientationInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.Interceptors;
 import xyz.zpayh.hdimage.datasource.interceptor.NetworkInterceptor;
+import xyz.zpayh.hdimage.datasource.interceptor.NetworkOrientationInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.ResourceInterceptor;
 import xyz.zpayh.hdimage.util.Preconditions;
+
+import static android.os.Build.VERSION.SDK_INT;
+import static xyz.zpayh.hdimage.datasource.BitmapDataSource.ASSET_SCHEME;
+import static xyz.zpayh.hdimage.datasource.BitmapDataSource.FILE_SCHEME;
+import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_0;
+import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_180;
+import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_270;
+import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_90;
+import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_EXIF;
 
 /**
  * 文 件 名: HDImageViewConfig
@@ -52,6 +75,7 @@ public class HDImageViewConfig {
     private final Interpolator mTranslationAnimationInterpolator;
 
     private final List<Interceptor> mInterceptors;
+    private final List<OrientationInterceptor> mOrientationInterceptors;
 
     public static Builder newBuilder(Context context){
         return new Builder(context);
@@ -85,6 +109,14 @@ public class HDImageViewConfig {
             mInterceptors.add(new NetworkInterceptor(builder.mContext));
         }
         mInterceptors.addAll(builder.mInterceptors);
+
+        mOrientationInterceptors = new ArrayList<>();
+        mOrientationInterceptors.addAll(builder.mOrientationInterceptors);
+
+        mOrientationInterceptors.add(new AssetOrientationInterceptor());
+        mOrientationInterceptors.add(new ContentOrientationInterceptor());
+        mOrientationInterceptors.add(new FileOrientationInterceptor());
+        mOrientationInterceptors.add(new NetworkOrientationInterceptor());
 
         //init
         Interceptors.initDiskLruCache(builder.mContext);
@@ -136,16 +168,20 @@ public class HDImageViewConfig {
         return mInterceptors;
     }
 
-    public static class Builder {
+    public List<OrientationInterceptor> getOrientationInterceptors() {
+        return mOrientationInterceptors;
+    }
 
-        //private BitmapDataSource mBitmapDataSource;
+    public static class Builder {
         private Interpolator mScaleAnimationInterpolator;
         private Interpolator mTranslationAnimationInterpolator;
         private Context mContext;
         private List<Interceptor> mInterceptors;
+        private final List<OrientationInterceptor> mOrientationInterceptors;
         private Builder(Context context){
             mContext = Preconditions.checkNotNull(context);
             mInterceptors = new ArrayList<>();
+            mOrientationInterceptors = new ArrayList<>();
         }
 
         public Builder setScaleAnimationInterpolator(Interpolator scaleAnimationInterpolator) {
@@ -160,6 +196,11 @@ public class HDImageViewConfig {
 
         public Builder addInterceptor(Interceptor interceptor){
             mInterceptors.add(interceptor);
+            return this;
+        }
+
+        public Builder addOrientationInterceptor(OrientationInterceptor interceptor){
+            mOrientationInterceptors.add(interceptor);
             return this;
         }
 

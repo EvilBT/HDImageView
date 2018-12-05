@@ -5,20 +5,26 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.media.ExifInterface;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import xyz.zpayh.hdimage.BuildConfig;
+import xyz.zpayh.hdimage.state.Orientation;
 import xyz.zpayh.hdimage.util.DiskLruCache;
 import xyz.zpayh.hdimage.util.ImageCache;
 import xyz.zpayh.hdimage.util.Preconditions;
+import xyz.zpayh.hdimage.util.UriUtil;
 
 /**
  * 创建人： zp
@@ -143,5 +149,35 @@ public class Interceptors {
             Log.d(TAG, "fixJPEGDecoder: 从此处修复Bitmap");
         }
         return decoder;
+    }
+
+    static int getExifOrientation(String sourceUri) {
+        if (UriUtil.isNetworkUri(Uri.parse(sourceUri))) {
+            try {
+                final String key = ImageCache.hashKeyForDisk(sourceUri);
+                if (mHttpDiskCache != null) {
+                    DiskLruCache.Snapshot snapshot = mHttpDiskCache.get(key);
+                    if (snapshot != null) {
+                        File file = new File(mHttpDiskCache.getDirectory(), key + "." + DISK_CACHE_INDEX);
+                        ExifInterface exifInterface = new ExifInterface(new FileInputStream(file));
+                        int orientationAttr = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
+                        switch (orientationAttr) {
+                            case ExifInterface.ORIENTATION_NORMAL:
+                            case ExifInterface.ORIENTATION_UNDEFINED:
+                                return Orientation.ORIENTATION_0;
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                return Orientation.ORIENTATION_90;
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                return Orientation.ORIENTATION_180;
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                return Orientation.ORIENTATION_270;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return Orientation.ORIENTATION_EXIF;
     }
 }
