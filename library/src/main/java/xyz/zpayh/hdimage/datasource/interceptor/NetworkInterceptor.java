@@ -21,6 +21,7 @@ package xyz.zpayh.hdimage.datasource.interceptor;
 import android.content.Context;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
+import android.support.annotation.CheckResult;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -95,6 +96,9 @@ public class NetworkInterceptor implements Interceptor{
                 Log.d("NetworkInterceptor", "从我这加载");
             }
             File file = processFile(uri.toString());
+            if (file == null) {
+                return null;
+            }
             try {
                 //InputStream inputStream = processBitmap(uri.toString());
                 return BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
@@ -106,7 +110,7 @@ public class NetworkInterceptor implements Interceptor{
         return null;
     }
 
-
+    @CheckResult
     private synchronized File processFile(String data) throws IOException{
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "processFile - " + data);
