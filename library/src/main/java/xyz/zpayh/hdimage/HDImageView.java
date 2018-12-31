@@ -121,7 +121,7 @@ public class HDImageView extends View {
 
     private float mMaxScale = 2F;
 
-    private float mMinScale = minScale();
+    private float mMinScale = 0.1F;
 
     /**
      * 加载更高分辨率的贴图之前达到的密度

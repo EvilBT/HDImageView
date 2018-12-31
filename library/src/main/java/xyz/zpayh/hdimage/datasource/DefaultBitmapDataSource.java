@@ -80,7 +80,8 @@ public class DefaultBitmapDataSource implements BitmapDataSource{
         synchronized (mDecoderLock) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = sampleSize;
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            // Default RGB_565
+            options.inPreferredConfig = HDImageViewFactory.getInstance().getBitmapConfig();
             return mDecoder.decodeRegion(sRect, options);
         }
     }

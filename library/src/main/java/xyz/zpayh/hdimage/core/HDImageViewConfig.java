@@ -18,20 +18,13 @@
 
 package xyz.zpayh.hdimage.core;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.media.ExifInterface;
-import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -51,15 +44,6 @@ import xyz.zpayh.hdimage.datasource.interceptor.NetworkOrientationInterceptor;
 import xyz.zpayh.hdimage.datasource.interceptor.ResourceInterceptor;
 import xyz.zpayh.hdimage.util.Preconditions;
 
-import static android.os.Build.VERSION.SDK_INT;
-import static xyz.zpayh.hdimage.datasource.BitmapDataSource.ASSET_SCHEME;
-import static xyz.zpayh.hdimage.datasource.BitmapDataSource.FILE_SCHEME;
-import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_0;
-import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_180;
-import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_270;
-import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_90;
-import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_EXIF;
-
 /**
  * 文 件 名: HDImageViewConfig
  * 创 建 人: 陈志鹏
@@ -76,12 +60,14 @@ public class HDImageViewConfig {
 
     private final List<Interceptor> mInterceptors;
     private final List<OrientationInterceptor> mOrientationInterceptors;
+    private final Bitmap.Config mBitmapConfig;
 
     public static Builder newBuilder(Context context){
         return new Builder(context);
     }
 
     private HDImageViewConfig(Builder builder){
+        mBitmapConfig = builder.mBitmapConfig;
         mScaleAnimationInterpolator = builder.mScaleAnimationInterpolator == null ?
                 new DecelerateInterpolator() : builder.mScaleAnimationInterpolator;
         mTranslationAnimationInterpolator = builder.mTranslationAnimationInterpolator == null ?
@@ -172,16 +158,27 @@ public class HDImageViewConfig {
         return mOrientationInterceptors;
     }
 
+    public Bitmap.Config getBitmapConfig() {
+        return mBitmapConfig;
+    }
+
     public static class Builder {
         private Interpolator mScaleAnimationInterpolator;
         private Interpolator mTranslationAnimationInterpolator;
         private Context mContext;
         private List<Interceptor> mInterceptors;
         private final List<OrientationInterceptor> mOrientationInterceptors;
+        private Bitmap.Config mBitmapConfig;
         private Builder(Context context){
             mContext = Preconditions.checkNotNull(context);
             mInterceptors = new ArrayList<>();
             mOrientationInterceptors = new ArrayList<>();
+            mBitmapConfig = Bitmap.Config.RGB_565;
+        }
+
+        public Builder setBitmapConfig(@NonNull Bitmap.Config config) {
+            mBitmapConfig = Preconditions.checkNotNull(config);
+            return this;
         }
 
         public Builder setScaleAnimationInterpolator(Interpolator scaleAnimationInterpolator) {

@@ -19,6 +19,7 @@
 package xyz.zpayh.hdimage.core;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.animation.Interpolator;
 
 import java.util.List;
@@ -86,5 +87,9 @@ public class HDImageViewFactory {
 
     public List<OrientationInterceptor> getOrientationInterceptor() {
         return mConfig.getOrientationInterceptors();
+    }
+
+    public Bitmap.Config getBitmapConfig() {
+        return mConfig.getBitmapConfig();
     }
 }
