@@ -25,11 +25,10 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 
-import xyz.zpayh.hdimage.HDImageView;
 import xyz.zpayh.hdimage.core.HDImageViewFactory;
 
 /**

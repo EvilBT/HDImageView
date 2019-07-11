@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import xyz.zpayh.hdimage.datasource.OrientationInterceptor;
 import xyz.zpayh.hdimage.state.Orientation;

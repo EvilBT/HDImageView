@@ -3,7 +3,7 @@ package xyz.zpayh.original.adapter;
 import android.content.Context;
 import android.graphics.Point;
 import android.net.Uri;
-import android.support.v4.view.PagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;

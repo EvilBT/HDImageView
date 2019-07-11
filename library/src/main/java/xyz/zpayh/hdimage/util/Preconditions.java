@@ -12,7 +12,7 @@
  */
 package xyz.zpayh.hdimage.util;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 public final class Preconditions {
     private Preconditions() {}
 

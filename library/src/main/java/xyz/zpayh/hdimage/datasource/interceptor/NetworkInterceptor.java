@@ -21,7 +21,7 @@ package xyz.zpayh.hdimage.datasource.interceptor;
 import android.content.Context;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
-import android.support.annotation.CheckResult;
+import androidx.annotation.CheckResult;
 import android.util.Log;
 
 import java.io.BufferedInputStream;

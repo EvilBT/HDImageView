@@ -23,12 +23,12 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 28
-        versionCode 3
-        versionName "2.0.0"
+        versionCode 4
+        versionName "3.0.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
     buildTypes {
@@ -43,15 +43,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:28.0.0'
-    testCompile 'junit:junit:4.12'
-    provided 'com.facebook.fresco:imagepipeline:1.11.0'
-    provided 'xyz.zpayh:hdimageview:2.1.2'
-    //compile project(':library')
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    compileOnly 'com.facebook.fresco:fresco:2.0.0'
+    compileOnly 'xyz.zpayh:hdimageview:3.0.0'
+    //implementation project(':library')
 }
 
 // jcenter configuration for novoda's bintray-release
@@ -60,7 +60,7 @@ dependencies {
     userOrg = 'sherlock'      //bintray注册的用户名
     groupId = 'xyz.zpayh'         //compile引用时的第1部分groupId
     artifactId = 'hdimageview-fresco'     //compile引用时的第2部分项目名
-    publishVersion = '2.1.2'    //compile引用时的第3部分版本号
+    publishVersion = '3.0.0'    //compile引用时的第3部分版本号
     desc = 'This is a high-definition picture control that supports zooming'
     website = 'https://github.com/EvilBT/HDImageView'
 }*/

@@ -20,7 +20,7 @@ package xyz.zpayh.hdimage;
 
 import android.graphics.Rect;
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import xyz.zpayh.hdimage.state.Orientation;
 

@@ -4,9 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.media.ExifInterface;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -63,8 +64,8 @@ public class MainApplication extends Application {
 
         // 与Fresco加载库结合，共享缓存
         HDImageViewConfig config = HDImageViewConfig.newBuilder(this)
-                .addInterceptor(new FrescoInterceptor())
-                //.addInterceptor(new GlideInterceptor(this))
+                //.addInterceptor(new FrescoInterceptor())
+                .addInterceptor(new GlideInterceptor(this))
                 //.addOrientationInterceptor(new GlideOrientationInterceptor(this))
                 .build();
         HDImageViewFactory.initialize(config);
@@ -79,7 +80,7 @@ public class MainApplication extends Application {
                 return decoder;
             }
 
-            if (com.facebook.common.util.UriUtil.isNetworkUri(uri)){
+            if (UriUtil.isNetworkUri(uri)){
                 ImagePipeline imagePipeline = ImagePipelineFactory.getInstance().getImagePipeline();
 
                 ImageRequest request = ImageRequest.fromUri(uri);

@@ -1,8 +1,8 @@
 package xyz.zpayh.hdimage.datasource.interceptor;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.media.ExifInterface;
+import androidx.annotation.NonNull;
+import androidx.exifinterface.media.ExifInterface;
 
 import java.io.IOException;
 

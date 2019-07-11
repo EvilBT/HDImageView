@@ -19,7 +19,7 @@
 package xyz.zpayh.hdimage;
 
 import android.graphics.PointF;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.animation.Interpolator;
 
