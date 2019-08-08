@@ -11,7 +11,7 @@ Requires Android SDK version 14 or higher.
 **Step 1.** Add the dependency
 ```
 dependencies {
-    implementation 'xyz.zpayh:hdimageview:3.0.0'
+    implementation 'xyz.zpayh:hdimageview:3.0.1'
 
     // 以下可以选用
 

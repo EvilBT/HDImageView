@@ -53,14 +53,14 @@ public class HDImageViewFactory {
         if (sDefaultInstance == null){
             synchronized (HDImageViewFactory.class){
                 if (sDefaultInstance == null){
-                    sDefaultInstance = new HDImageViewFactory(HDImageViewConfig.newBuilder(context).build());
+                    sDefaultInstance = new HDImageViewFactory(HDImageViewConfig.newBuilder(context.getApplicationContext()).build());
                 }
             }
         }
     }
 
     public static void initialize(Context context){
-        initialize(HDImageViewConfig.newBuilder(context).build());
+        initialize(HDImageViewConfig.newBuilder(context.getApplicationContext()).build());
     }
 
     public static void initialize(HDImageViewConfig config){
