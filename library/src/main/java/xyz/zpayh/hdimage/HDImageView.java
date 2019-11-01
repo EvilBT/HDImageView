@@ -1166,7 +1166,7 @@ public class HDImageView extends View {
         mScale = mSatTemp.mScale;
         mViewTranslate.set(mSatTemp.mViewTranslate);
         if (init){
-            mViewTranslate.set(getTranslateForSourceCenter(getShowWidth()/2.0F, getShowHeight()/2.0F,mScale));
+            mViewTranslate.set(getTranslateForSourceCenter(getShowWidth()/2.0F, 0f,mScale));
         }
     }
 
