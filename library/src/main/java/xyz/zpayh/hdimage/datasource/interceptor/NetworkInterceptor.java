@@ -169,7 +169,11 @@ public class NetworkInterceptor implements Interceptor{
         try {
             out.close();
             in.close();
-        } catch (final IOException e) {e.printStackTrace();}
+        } catch (final IOException e) {
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+            }
+        }
 
         return true;
     }

@@ -1,32 +1,23 @@
 package xyz.zpayh.original;
 
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.AdapterView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import xyz.zpayh.hdimage.HDImageView;
+import xyz.zpayh.hdimage.ImageSizeOptions;
 import xyz.zpayh.hdimage.ImageSource;
 import xyz.zpayh.hdimage.ImageSourceBuilder;
+import xyz.zpayh.hdimage.ImageSourceLoadListener;
 
-import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_0;
-import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_180;
-import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_270;
-import static xyz.zpayh.hdimage.state.Orientation.ORIENTATION_90;
-import static xyz.zpayh.hdimage.state.ScaleType.CENTER_CROP;
-import static xyz.zpayh.hdimage.state.ScaleType.CENTER_INSIDE;
 import static xyz.zpayh.hdimage.state.ScaleType.CUSTOM;
-import static xyz.zpayh.hdimage.state.Translation.CENTER;
-import static xyz.zpayh.hdimage.state.Translation.INSIDE;
-import static xyz.zpayh.hdimage.state.Translation.OUTSIDE;
-import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_CENTER;
-import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_CENTER_IMMEDIATE;
-import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_FIXED;
 import static xyz.zpayh.original.UriConstants.IMAGE_11;
+import static xyz.zpayh.original.UriConstants.IMAGE_12;
 
 public class BasicActivity extends AppCompatActivity {
 
@@ -42,10 +33,22 @@ public class BasicActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mImageView = (HDImageView) findViewById(R.id.image);
-
+        mImageView.setMaxScale(20f);
+        mImageView.setMinScale(1f);
+        mImageView.setDoubleTapZoomScale(10F);
+        mImageView.setScaleType(CUSTOM);
         if (savedInstanceState == null) {
             ImageSource imageSource = ImageSourceBuilder.newBuilder()
-                    .setUri(IMAGE_11)
+                    .setUri(IMAGE_12)
+                    .setImageSourceLoadListener(new ImageSourceLoadListener() {
+                        @Override
+                        public void loadSuccess(Uri uri, ImageSizeOptions options) {
+                            float scaleW = mImageView.getWidth() / options.mWidth;
+                            float scaleH = mImageView.getHeight() / options.mHeight;
+                            mImageView.setMinScale(Math.min(1.0f,Math.min(scaleW, scaleH)));
+                            mImageView.resetScaleAndCenter();
+                        }
+                    })
                     .build();
             mImageView.setImageSource(imageSource);
         }
@@ -65,7 +68,7 @@ public class BasicActivity extends AppCompatActivity {
             }
         });
 
-        Spinner spinner = (Spinner) findViewById(R.id.sp_pan_state);
+        /*Spinner spinner = (Spinner) findViewById(R.id.sp_pan_state);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -82,9 +85,9 @@ public class BasicActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
-        spinner = (Spinner) findViewById(R.id.sp_orientation);
+        /*spinner = (Spinner) findViewById(R.id.sp_orientation);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -103,9 +106,9 @@ public class BasicActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
-        spinner = (Spinner) findViewById(R.id.sp_zoom);
+        /*spinner = (Spinner) findViewById(R.id.sp_zoom);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -122,9 +125,9 @@ public class BasicActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
-        spinner = (Spinner) findViewById(R.id.sp_scale_type);
+        /*spinner = (Spinner) findViewById(R.id.sp_scale_type);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -141,7 +144,7 @@ public class BasicActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
         mImageView.setScaleAnimationInterpolator(new AccelerateDecelerateInterpolator());
     }

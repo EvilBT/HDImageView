@@ -23,6 +23,7 @@ import xyz.zpayh.hdimage.ImageSourceLoadListener;
 
 import static xyz.zpayh.original.UriConstants.IMAGE_1;
 import static xyz.zpayh.original.UriConstants.IMAGE_10;
+import static xyz.zpayh.original.UriConstants.IMAGE_12;
 import static xyz.zpayh.original.UriConstants.IMAGE_2;
 import static xyz.zpayh.original.UriConstants.IMAGE_3;
 import static xyz.zpayh.original.UriConstants.IMAGE_4;
@@ -75,6 +76,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         data.add(getImageSource(IMAGE_8));
         data.add(getImageSource(IMAGE_9));
         data.add(getImageSource(IMAGE_10));
+        data.add(getImageSource(IMAGE_12));
 
         mAdapter.setData(data);
     }

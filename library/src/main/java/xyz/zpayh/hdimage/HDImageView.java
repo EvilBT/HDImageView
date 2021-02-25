@@ -88,13 +88,13 @@ import static xyz.zpayh.hdimage.state.Zoom.ZOOM_FOCUS_FIXED;
 import static xyz.zpayh.hdimage.util.Utils.fileRect;
 
 /**
- * 文 件 名: OriginalImageView
+ * 文 件 名: HDImageView
  * 创 建 人: 陈志鹏
  * 创建日期: 2017/4/1 14:51
  * 邮   箱: ch_zh_p@qq.com
  * 修改时间:
  * 修改备注:
- *  参考于Subsampling Scale Image View
+ *  参考于 Subsampling Scale Image View
  */
 
 public class HDImageView extends View {
@@ -386,7 +386,9 @@ public class HDImageView extends View {
                 .setOrientation(ss.mOrientation)
                 .setImageViewOptions(imageViewOptions)
                 .build());
-        Log.d(TAG, "onRestoreInstanceState");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onRestoreInstanceState");
+        }
     }
 
     @Override
@@ -606,8 +608,10 @@ public class HDImageView extends View {
         }
         width = Math.max(width, getSuggestedMinimumWidth());
         height = Math.max(height, getSuggestedMinimumHeight());
-        Log.d(TAG, "SourceSize:(" + mSourceWidth + "," + mSourceHeight + ")");
-        Log.d(TAG, "(" + width + "," + height + ")");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "SourceSize:(" + mSourceWidth + "," + mSourceHeight + ")");
+            Log.d(TAG, "(" + width + "," + height + ")");
+        }
         setMeasuredDimension(width, height);
     }
 
@@ -830,7 +834,9 @@ public class HDImageView extends View {
     }
 
     private void startDoubleTapAnimator(PointF sCenter, PointF vFocus) {
-        Log.d(TAG, "双击动画");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "双击动画");
+        }
         if (!mTranslateEnabled){
             sCenter.x = getShowWidth()/2.0F;
             sCenter.y = getShowHeight()/2.0F;
@@ -1741,13 +1747,17 @@ public class HDImageView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        Log.d(TAG, "onAttachedToWindow");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onAttachedToWindow");
+        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.d(TAG, "onDetachedFromWindow");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "onDetachedFromWindow");
+        }
         //recycle();
     }
 
@@ -1825,7 +1835,9 @@ public class HDImageView extends View {
                 .build();
         mValueAnimator.start();
 
-        Log.d(TAG, "startFilingAnimation");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "startFilingAnimation");
+        }
     }
 
     private void startZoomForCenter(PointF sCenter, float scaleEnd) {
@@ -1857,7 +1869,9 @@ public class HDImageView extends View {
 
         mValueAnimator.start();
 
-        Log.d(TAG, "startZoomForCenter");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "startZoomForCenter");
+        }
     }
 
     private void startZoomForFixed(PointF sCenter, PointF vFocus, float scaleEnd) {
@@ -1904,7 +1918,9 @@ public class HDImageView extends View {
 
         mValueAnimator.start();
 
-        Log.d(TAG, "startZoomForFixed");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "startZoomForFixed");
+        }
     }
 
 
@@ -2079,7 +2095,7 @@ public class HDImageView extends View {
                     mMapping.mLoading = false;
                     if (!mOriginalHandler.hasMessages(MSG_TILE_LOAD_SUCCESS)) {
                         mOriginalHandler.sendEmptyMessage(MSG_TILE_LOAD_SUCCESS);
-                    }else {
+                    }else if (BuildConfig.DEBUG){
                         Log.d(TAG, "已经有相同的消息了");
                     }
                 }

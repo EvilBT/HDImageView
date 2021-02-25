@@ -141,7 +141,7 @@ public class Interceptors {
             throw e;
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 85, baos);
+        bitmap.compress(Bitmap.CompressFormat.WEBP, 85, baos);
         BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(baos.toByteArray(),0,baos.size(),false);
         bitmap.recycle();
         if (BuildConfig.DEBUG) {

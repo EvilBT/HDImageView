@@ -2,6 +2,7 @@ package xyz.zpayh.original;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
 import android.util.Log;
@@ -194,6 +195,10 @@ public class MainApplication extends Application {
                     File file = target.get();
                     try {
                         Log.d("GlideInterceptor", "用GlideInterceptor加载回来"+file.getAbsolutePath());
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeFile(file.getPath(), options);
+                        Log.d("GlideInterceptor", "图片类型:"+options.outMimeType);
                         decoder = BitmapRegionDecoder.newInstance(new FileInputStream(file),false);
                     } catch (IOException e) {
                         e.printStackTrace();

@@ -23,6 +23,8 @@ public class UriConstants {
     public static final String IMAGE_7 = ASSET_SCHEME+"woman-2212358.jpg";
     public static final String IMAGE_8 = ASSET_SCHEME+ "girl/girl-2161202.jpg";
     public static final String IMAGE_9 = ASSET_SCHEME+"night-view.jpg";
-    public static final String IMAGE_10 = "http://7xi8d6.com1.z0.glb.clouddn.com/2017-04-16-17934400_1738549946443321_2924146161843437568_n.jpg";
+    public static final String IMAGE_10 = "https://pic1.zhimg.com/80/v2-4514d92451b190a0239a438a0736ec78_hd.jpg";
     public static final String IMAGE_11 = "https://wx2.sinaimg.cn/large/005M94J9ly4fgh3xlpcefj31jk1yw0z2.jpg";
+    public static final String IMAGE_12 = "https://pic3.zhimg.com/50/v2-d1d8bceda83722c227feb03160f4a5a2_hd.webp";
+    public static final String IMAGE_13 = "https://pic2.zhimg.com/80/v2-374fdcfd9ec7e81ad4ca1098a48d5811_hd.jpg";
 }
